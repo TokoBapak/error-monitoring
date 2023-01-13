@@ -1,0 +1,3 @@
+* @TokoBapak/frontend
+server/ @TokoBapak/backend
+.nomad @TokoBapak/infrastructure
