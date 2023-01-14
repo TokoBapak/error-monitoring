@@ -6,7 +6,7 @@ export class SimpleMemoryCache implements ICache {
     private readonly _defaultTimeToLive: number;
 
     constructor(defaultTtl?: number) {
-        if (defaultTtl === undefined || defaultTtl <= 0) {
+        if (defaultTtl == undefined || defaultTtl <= 0) {
             this._defaultTimeToLive = -1;
         } else {
             this._defaultTimeToLive = defaultTtl;

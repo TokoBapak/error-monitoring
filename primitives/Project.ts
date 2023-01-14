@@ -11,4 +11,25 @@ export class Project {
     ) {
         if (name === "") throw new InvalidArgumentError("name is empty")
     }
+
+    public toString(): string {
+        return JSON.stringify({
+            id: this.id.toString(),
+            name: this.name.toString(),
+            repositoryUrl: this.repositoryUrl,
+            createdAt: this.createdAt.toISOString(),
+            createdBy: this.createdBy.toString()
+        })
+    }
+
+    static fromJSONString(str: string): Project {
+        const parsed = JSON.parse(str);
+        return new Project(
+            new UUID(parsed.id),
+            parsed.name,
+            parsed.repositoryUrl,
+            parsed.createdAt,
+            new UUID(parsed.createdBy)
+        )
+    }
 }

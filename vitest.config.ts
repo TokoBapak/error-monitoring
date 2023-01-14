@@ -8,7 +8,7 @@ export default defineConfig({
             provider: "c8"
         },
         alias: {
-            "~": resolve(dirname(fileURLToPath(import.meta.url)), "src")
+            "~": resolve(dirname(fileURLToPath(import.meta.url)))
         }
     },
 });

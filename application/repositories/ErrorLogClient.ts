@@ -1,5 +1,6 @@
 import {Clickhouse} from "clickhouse-ts";
 import {ErrorEvent} from "~/primitives/ErrorEvent";
+import {UUID} from "~/primitives/UUID";
 
 export class ErrorLogClient {
     constructor(private readonly client: Clickhouse) {    }
@@ -25,15 +26,25 @@ export class ErrorLogClient {
                 noFormat: true,
             },
         );
+
+        // TODO: create `id` field as unique
     }
 
-    async create(event: ErrorEvent): Promise<void> {
+    async create(projectId: UUID, event: ErrorEvent): Promise<void> {
         await this.client.insert(
             "error_logs",
-            {
+            [{
                 "id": event.uuid.toString(),
-                project: event
-
-            })
+                project: projectId.toString(),
+                environment: event.environment,
+                level: event.level.toString(),
+                title: event.title,
+                status: 0,
+                platform: event.platform,
+                language: event.language,
+                payload: JSON.stringify(event.payload),
+                timestamp: event.timestamp.toString(),
+            }],
+        );
     }
  }

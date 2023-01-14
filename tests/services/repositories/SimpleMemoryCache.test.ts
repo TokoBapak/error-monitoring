@@ -1,5 +1,5 @@
 import {describe, it, expect} from "vitest";
-import {SimpleMemoryCache} from "~/application/repositories/SimpleMemoryCache.ts";
+import {SimpleMemoryCache} from "~/application/repositories/SimpleMemoryCache";
 
 
 describe("SimpleMemoryCache", () => {
