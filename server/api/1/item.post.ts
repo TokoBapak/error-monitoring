@@ -48,11 +48,55 @@ const requestSchema = z.object({
                         }).optional(),
                     })),
                     exception: z.object({
-                        // TODO~
+                        class: z.string(),
+                        message: z.string().optional(),
+                        description: z.string().optional()
                     })
                 })
             }),
-            bodySchemaBase.extend({})
+            bodySchemaBase.extend({
+                trace_chain: z.array(
+                    z.object({
+                        frames: z.array(z.object({
+                            filename: z.string(),
+                            lineno: z.number().optional(),
+                            colno: z.number().optional(),
+                            method: z.string().optional(),
+                            code: z.string().optional(),
+                            class_name: z.string().optional(),
+                            context: z.object({
+                                pre: z.array(z.string()).optional(),
+                                post: z.array(z.string()),
+                            }).optional(),
+                            argspec: z.array(z.string()).optional(),
+                            varargspec: z.string().optional(),
+                            keywordspec: z.string().optional(),
+                            locals: z.object({
+                                request: z.string(),
+                                user: z.string(),
+                                args: z.array(z.any()),
+                                kwargs: z.record(z.any()),
+                            }).optional(),
+                        })),
+                        exception: z.object({
+                            class: z.string(),
+                            message: z.string().optional(),
+                            description: z.string().optional()
+                        })
+                    })
+                )}),
+            bodySchemaBase.extend({
+                message: z.object({
+                    body: z.string(),
+                    route: z.string(),
+                    time_elapsed: z.number(),
+                })
+            }),
+            bodySchemaBase.extend({
+                crash_report: z.object({
+                    raw: z.string()
+                })
+            })
         ]),
         level: z.enum(["critical", "error", "warning", "info", "debug"] as const).optional(),
         timestamp: z.number().optional(),

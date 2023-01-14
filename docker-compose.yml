@@ -1,0 +1,17 @@
+services:
+  clickhouse:
+    image: clickhouse/clickhouse-server:22.12.3
+    ports:
+      - 8123:8123
+      - 9000:9000
+    ulimits:
+      nproc: 65536
+      nofile:
+        soft: 252144
+        hard: 252144
+    healthcheck:
+      test: wget --spider -q localhost:8123/ping
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
