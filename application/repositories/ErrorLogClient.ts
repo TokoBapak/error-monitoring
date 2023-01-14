@@ -1,4 +1,5 @@
 import {Clickhouse} from "clickhouse-ts";
+import {ErrorEvent} from "~/primitives/ErrorEvent";
 
 export class ErrorLogClient {
     constructor(private readonly client: Clickhouse) {    }
@@ -24,5 +25,15 @@ export class ErrorLogClient {
                 noFormat: true,
             },
         );
+    }
+
+    async create(event: ErrorEvent): Promise<void> {
+        await this.client.insert(
+            "error_logs",
+            {
+                "id": event.uuid.toString(),
+                project: event
+
+            })
     }
  }

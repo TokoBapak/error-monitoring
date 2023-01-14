@@ -1,5 +1,6 @@
 import {UUID} from "~/primitives/UUID";
+import {ErrorEvent} from "~/primitives/ErrorEvent";
 
 export interface IRollbarWriter {
-    writeEvent(event: Event): Promise<UUID>;
+    writeEvent(token: string, event: ErrorEvent): Promise<UUID>;
 }

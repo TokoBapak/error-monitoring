@@ -1,6 +1,10 @@
 // API reference for this endpoint: https://docs.rollbar.com/reference/create-item
 
-import { z } from "zod";
+import {z, ZodError} from "zod";
+import {rollbarWriter} from "~/application/services/RollbarWriter";
+import {ErrorEvent} from "~/primitives/ErrorEvent";
+import {UUID} from "~/primitives/UUID";
+import {convertToErrorLevel} from "~/primitives/ErrorLevel";
 
 const bodySchemaBase = z.object({
     telemetry: z.array(z.object({
@@ -153,4 +157,56 @@ export default defineEventHandler(async (event) => {
     const accessToken: string | undefined = getRequestHeader(event, "X-Rollbar-Access-Token");
 
     const requestBody: any = await readBody(event);
+
+    try {
+        if (accessToken === undefined) {
+            setResponseStatus(event, 401);
+            setResponseHeader(event, "Content-Type", "application/json");
+            await send(event, {
+                err: 1,
+                message: "Unauthenticated"
+            });
+            return;
+        }
+
+        // Validate input schema
+        const parsedRequestBody = requestSchema.parse(requestBody);
+
+        const errorEvent: ErrorEvent = {
+            environment: parsedRequestBody.data.environment,
+            framework: parsedRequestBody.data.framework,
+            language: parsedRequestBody.data.language,
+            level: convertToErrorLevel(parsedRequestBody.data.level ?? ""),
+            payload: {body: parsedRequestBody.data.body},
+            platform: "",
+            timestamp: new Date(parsedRequestBody.data.timestamp ?? Date.now()),
+            title: "",
+            uuid: new UUID()
+        };
+
+        await rollbarWriter.writeEvent(accessToken, errorEvent);
+        setResponseStatus(event, 200);
+        setResponseHeader(event, "Content-Type", "application/json");
+        await send(event, {
+            err: 0,
+            message: "Sent",
+        })
+    } catch (error: unknown) {
+        if (error instanceof ZodError) {
+            setResponseStatus(event, 400);
+            setResponseHeader(event, "Content-Type", "application/json");
+            await send(event, {
+                err: 1,
+                message: error.message
+            })
+            return;
+        }
+
+        createError({
+            statusCode: 500,
+            statusMessage: "Internal server error",
+            data: error
+        });
+    }
+
 })
