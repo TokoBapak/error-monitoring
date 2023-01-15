@@ -62,7 +62,7 @@ jobs:
       #   run: npx eslint --ignore-path .gitignore .
 
       - name: Test
-        run: npx vitest run --coverage
+        run: pnpm run test:coverage
         env:
           CLICKHOUSE_URL: clickhouse
           CLICKHOUSE_PORT: 8123
