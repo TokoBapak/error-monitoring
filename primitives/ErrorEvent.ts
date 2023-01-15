@@ -52,7 +52,7 @@ export type ErrorEvent = {
             traceChain?: Trace[],
             message?: {
                 body: string,
-                [key: string]: never
+                [key: string]: unknown
             },
             crashReport?: {
                 raw: string

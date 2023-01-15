@@ -8,7 +8,7 @@ import {InvalidProject} from "~/errors/InvalidProject";
 import {Authentication} from "~/application/services/Authentication";
 import {SimpleMemoryCache} from "~/application/repositories/SimpleMemoryCache";
 import {ErrorLogClient} from "~/application/repositories/ErrorLogClient";
-import {Clickhouse} from "clickhouse-ts";
+import {Clickhouse} from "~/application/internal/clickhouse-ts";
 import {ProjectClient} from "~/application/repositories/ProjectClient";
 import {Pool} from "pg";
 
@@ -44,7 +44,7 @@ export const rollbarWriter = new RollbarWriter(
             user: process.env.CLICKHOUSE_USER ?? "default",
             password: process.env.CLICKHOUSE_PASSWORD ?? "",
             database: process.env.CLICKHOUSE_DATABASE ?? "default"
-        }, {defaultResponseFormat: "TSV"})
+        }, {defaultFormat: "TSV"})
     ),
     new ProjectClient(new Pool({
         host: process.env.POSTGRES_HOST ?? "localhost",

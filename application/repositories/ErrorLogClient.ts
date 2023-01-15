@@ -1,8 +1,9 @@
-import {Clickhouse} from "clickhouse-ts";
+import {Clickhouse} from "~/application/internal/clickhouse-ts";
 import {ErrorEvent} from "~/primitives/ErrorEvent";
 import {UUID} from "~/primitives/UUID";
+import {IErrorLogRepository} from "~/application/interfaces/IErrorLogRepository";
 
-export class ErrorLogClient {
+export class ErrorLogClient implements IErrorLogRepository {
     constructor(private readonly client: Clickhouse) {    }
 
     async migrate(): Promise<void> {
@@ -13,21 +14,17 @@ export class ErrorLogClient {
                 environment String NOT NULL,
                 level String NOT NULL,
                 title String NOT NULL,
-                status Uint8 NOT NULL,
+                status UInt8 NOT NULL,
                 platform Nullable(String),
-                language Nullable(string),
+                language Nullable(String),
                 payload String NOT NULL,
-                timestamp DateTime NOT NULL
+                timestamp DateTime NOT NULL,
+                PRIMARY KEY(timestamp)
             )
             Engine = MergeTree
             ORDER BY timestamp
-            TTL timestamp + INTERVAL 3 MONTH DELETE,`,
-            {
-                noFormat: true,
-            },
+            TTL timestamp + INTERVAL 3 MONTH DELETE`,
         );
-
-        // TODO: create `id` field as unique
     }
 
     async create(projectId: UUID, event: ErrorEvent): Promise<void> {
@@ -43,7 +40,7 @@ export class ErrorLogClient {
                 platform: event.platform,
                 language: event.language,
                 payload: JSON.stringify(event.payload),
-                timestamp: event.timestamp.toString(),
+                timestamp: event.timestamp,
             }],
         );
     }
