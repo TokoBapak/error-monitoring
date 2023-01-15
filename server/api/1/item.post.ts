@@ -8,7 +8,7 @@ import {convertToErrorLevel} from "~/primitives/ErrorLevel";
 
 const bodySchemaBase = z.object({
     telemetry: z.array(z.object({
-        level: z.enum(["critical", "error", "warning", "info", "debug"] as const),
+        level: z.enum(["critical", "error", "warning", "info", "debug"] as const).transform(arg => convertToErrorLevel(arg)),
         type: z.enum(["log", "network", "dom", "navigation", "error", "manual"] as const),
         source: z.string(),
         timestamp_ms: z.number(),
@@ -70,7 +70,7 @@ const requestSchema = z.object({
                             class_name: z.string().optional(),
                             context: z.object({
                                 pre: z.array(z.string()).optional(),
-                                post: z.array(z.string()),
+                                post: z.array(z.any()),
                             }).optional(),
                             argspec: z.array(z.string()).optional(),
                             varargspec: z.string().optional(),
@@ -90,11 +90,7 @@ const requestSchema = z.object({
                     })
                 )}),
             bodySchemaBase.extend({
-                message: z.object({
-                    body: z.string(),
-                    route: z.string(),
-                    time_elapsed: z.number(),
-                })
+                message: z.record(z.any())
             }),
             bodySchemaBase.extend({
                 crash_report: z.object({
@@ -102,7 +98,7 @@ const requestSchema = z.object({
                 })
             })
         ]),
-        level: z.enum(["critical", "error", "warning", "info", "debug"] as const).optional(),
+        level: z.enum(["critical", "error", "warning", "info", "debug"] as const).optional().transform(arg => convertToErrorLevel(arg)),
         timestamp: z.number().optional(),
         code_version: z.string().optional(),
         platform: z.string().optional(),
@@ -145,7 +141,7 @@ const requestSchema = z.object({
         custom: z.record(z.any()).optional(),
         fingerprint: z.string().optional(),
         title: z.string().max(255).optional(),
-        uuid: z.string().max(36).optional(),
+        uuid: z.string().max(36).optional().transform(arg => new UUID(arg)),
         notifier: z.object({
             name: z.string().optional(),
             version: z.string().optional()
@@ -173,15 +169,28 @@ export default defineEventHandler(async (event) => {
         const parsedRequestBody = requestSchema.parse(requestBody);
 
         const errorEvent: ErrorEvent = {
+            uuid: new UUID(),
             environment: parsedRequestBody.data.environment,
-            framework: parsedRequestBody.data.framework,
-            language: parsedRequestBody.data.language,
-            level: convertToErrorLevel(parsedRequestBody.data.level ?? ""),
-            payload: {body: parsedRequestBody.data.body},
+            framework: parsedRequestBody.data.framework ?? "",
+            language: parsedRequestBody.data.language ?? "",
+            level: parsedRequestBody.data.level,
+            payload: {
+                body: {},
+                codeVersion: parsedRequestBody.data.code_version,
+                context: parsedRequestBody.data.context,
+                request: undefined,
+                person: {
+                    id: ""
+                },
+                server: {},
+                client: {},
+                custom: {},
+                fingerprint: parsedRequestBody.data.fingerprint,
+                notifier: {}
+            },
             platform: "",
             timestamp: new Date(parsedRequestBody.data.timestamp ?? Date.now()),
             title: "",
-            uuid: new UUID()
         };
 
         await rollbarWriter.writeEvent(accessToken, errorEvent);
