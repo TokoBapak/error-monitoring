@@ -5,10 +5,12 @@ specifiers:
   '@trpc/server': ^10.9.0
   '@types/node': ^18.11.18
   '@types/pg': ^8.6.6
+  '@types/pg-cursor': ^2.7.0
   clickcache: ^1.0.6
   clickhouse-ts: ^2.0.4
   nuxt: 3.0.0
   pg: ^8.8.0
+  pg-cursor: ^2.7.4
   trpc-nuxt: ^0.5.0
   vitest: ^0.27.1
   zod: ^3.20.2
@@ -19,12 +21,14 @@ dependencies:
   clickcache: 1.0.6
   clickhouse-ts: 2.0.4
   pg: 8.8.0
+  pg-cursor: 2.7.4_pg@8.8.0
   trpc-nuxt: 0.5.0_2zpqbmooshoeqfe2ml35ze43ai
   zod: 3.20.2
 
 devDependencies:
   '@types/node': 18.11.18
   '@types/pg': 8.6.6
+  '@types/pg-cursor': 2.7.0
   nuxt: 3.0.0_@types+node@18.11.18
   vitest: 0.27.1
 
@@ -819,6 +823,13 @@ packages:
 
   /@types/node/18.11.18:
     resolution: {integrity: sha512-DHQpWGjyQKSHj3ebjFI/wRKcqQcdR+MoFBygntYOZytCqNfkd2ZC4ARDJ2DQqhjH5p85Nnd3jhUJIXrszFX/JA==}
+    dev: true
+
+  /@types/pg-cursor/2.7.0:
+    resolution: {integrity: sha512-4Milg/OUqTO2VuPvvRwPxaQTaiVb+bXvSK+ZCwiHjwinbD4/lPqV9AREg8sJAT0cy5ruY38aaajBc2FbdPaKcA==}
+    dependencies:
+      '@types/node': 18.11.18
+      '@types/pg': 8.6.6
     dev: true
 
   /@types/pg/8.6.6:
@@ -3435,6 +3446,14 @@ packages:
 
   /pg-connection-string/2.5.0:
     resolution: {integrity: sha512-r5o/V/ORTA6TmUnyWZR9nCj1klXCO2CEKNRlVuJptZe85QuhFayC7WeMic7ndayT5IRIR0S0xFxFi2ousartlQ==}
+    dev: false
+
+  /pg-cursor/2.7.4_pg@8.8.0:
+    resolution: {integrity: sha512-CNWwOzTTZ9QvphoOL+Wg/7pmVr9GnAWBjPbuK2FRclrB4A/WRO/ssCJ9BlkzIGmmofK2M/LyokNHgsLSn+fMHA==}
+    peerDependencies:
+      pg: ^8
+    dependencies:
+      pg: 8.8.0
     dev: false
 
   /pg-int8/1.0.1:

@@ -1,4 +1,5 @@
 import { Pool } from "pg";
+import Cursor from "pg-cursor";
 import {IProjectRepository} from "~/application/interfaces/IProjectRepository";
 import {UUID} from "~/primitives/UUID";
 import {Project} from "~/primitives/Project";
@@ -126,22 +127,24 @@ export class ProjectClient implements IProjectRepository {
         const conn = await this.client.connect();
 
         try {
-            const queryResult = await conn.query(`SELECT 
+            const queryResult = conn.query(new Cursor(`SELECT 
                 id, 
                 name, 
                 repository_url, 
                 created_at, 
                 created_by
             FROM
-                project`);
+                project`));
 
-            if (queryResult.rowCount === 0) {
+            const rows = await queryResult.read(500);
+
+            if (rows.length === 0) {
                 return [] as Project[];
             }
 
             const projects: Project[] = [];
 
-            for (const row of queryResult.rows) {
+            for (const row of rows) {
                 if (row === undefined) continue;
 
                 let createdAt: Date;
