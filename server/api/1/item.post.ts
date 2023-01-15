@@ -98,7 +98,7 @@ const requestSchema = z.object({
                 })
             })
         ]),
-        level: z.enum(["critical", "error", "warning", "info", "debug"] as const).optional().transform(arg => convertToErrorLevel(arg)),
+        level: z.enum(["critical", "error", "warning", "info", "debug"] as const).optional().transform(arg => convertToErrorLevel(arg ?? "")),
         timestamp: z.number().optional(),
         code_version: z.string().optional(),
         platform: z.string().optional(),
@@ -156,7 +156,7 @@ export default defineEventHandler(async (event) => {
 
     try {
         if (accessToken === undefined) {
-            setResponseStatus(event, 401);
+            setResponseStatus(401);
             setResponseHeader(event, "Content-Type", "application/json");
             await send(event, {
                 err: 1,
@@ -194,7 +194,7 @@ export default defineEventHandler(async (event) => {
         };
 
         await rollbarWriter.writeEvent(accessToken, errorEvent);
-        setResponseStatus(event, 200);
+        setResponseStatus(200);
         setResponseHeader(event, "Content-Type", "application/json");
         await send(event, {
             err: 0,
@@ -202,7 +202,7 @@ export default defineEventHandler(async (event) => {
         })
     } catch (error: unknown) {
         if (error instanceof ZodError) {
-            setResponseStatus(event, 400);
+            setResponseStatus(400);
             setResponseHeader(event, "Content-Type", "application/json");
             await send(event, {
                 err: 1,

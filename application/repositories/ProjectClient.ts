@@ -96,14 +96,12 @@ export class ProjectClient implements IProjectRepository {
 
 
             const row = queryResult.rows[0];
-            let createdAt: Date;
+            let createdAt: Date = new Date(0);
             if (row.created_at !== undefined) {
                 if (typeof row.created_at === "string") {
                     createdAt = new Date(row.created_at);
                 } else if (row.created_at instanceof Date) {
                     createdAt = row.created_at;
-                } else {
-                    createdAt = new Date(0);
                 }
             }
 
@@ -147,14 +145,12 @@ export class ProjectClient implements IProjectRepository {
             for (const row of rows) {
                 if (row === undefined) continue;
 
-                let createdAt: Date;
+                let createdAt: Date = new Date(0);;
                 if (row.created_at !== undefined) {
                     if (typeof row.created_at === "string") {
                         createdAt = new Date(row.created_at);
                     } else if (row.created_at instanceof Date) {
                         createdAt = row.created_at;
-                    } else {
-                        createdAt = new Date(0);
                     }
                 }
 

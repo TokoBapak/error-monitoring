@@ -8,9 +8,8 @@ import {InvalidProject} from "~/errors/InvalidProject";
 import {Authentication} from "~/application/services/Authentication";
 import {SimpleMemoryCache} from "~/application/repositories/SimpleMemoryCache";
 import {ErrorLogClient} from "~/application/repositories/ErrorLogClient";
-import {Clickhouse} from "~/application/internal/clickhouse-ts";
 import {ProjectClient} from "~/application/repositories/ProjectClient";
-import {Pool} from "pg";
+import {clickhouseClient, postgresClient} from "~/application/clients";
 
 export class RollbarWriter implements IRollbarWriter {
     constructor(
@@ -24,12 +23,12 @@ export class RollbarWriter implements IRollbarWriter {
         const projectId = await this.authentication.validateProjectToken(token);
 
         // Check if project ID exists.
-        const exists = await this.projectRepository.exists(projectId);
+        const exists = await this.projectRepository.exists(projectId.id);
 
-        if (!exists) throw new InvalidProject("invalid project: " + projectId.toString());
+        if (!exists) throw new InvalidProject("invalid project: " + projectId.id.toString());
 
         // Write to database
-        await this.errorLogRepository.create(projectId, event);
+        await this.errorLogRepository.create(projectId.id, event);
 
         return event.uuid;
     }
@@ -37,20 +36,6 @@ export class RollbarWriter implements IRollbarWriter {
 
 export const rollbarWriter = new RollbarWriter(
     new Authentication(new SimpleMemoryCache()),
-    new ErrorLogClient(
-        new Clickhouse({
-            url: process.env.CLICKHOUSE_URL ?? "localhost",
-            port: Number(process.env.CLICKHOUSE_PORT ?? "8123"),
-            user: process.env.CLICKHOUSE_USER ?? "default",
-            password: process.env.CLICKHOUSE_PASSWORD ?? "",
-            database: process.env.CLICKHOUSE_DATABASE ?? "default"
-        }, {defaultFormat: "TSV"})
-    ),
-    new ProjectClient(new Pool({
-        host: process.env.POSTGRES_HOST ?? "localhost",
-        port: Number(process.env.POSTGRES_PORT ?? "5432"),
-        user: process.env.POSTGRES_USER ?? "tokobapak",
-        password: process.env.POSTGRES_PASSWORD ?? "password",
-        database: process.env.POSTGRES_DATABASE ?? "error_monitoring"
-    })),
+    new ErrorLogClient(clickhouseClient),
+    new ProjectClient(postgresClient),
 );
