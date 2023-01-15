@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AxiosResponse } from 'axios'
 import { QueryOptions } from '../clickhouse'
 
 export interface RequestParams {
@@ -26,8 +25,8 @@ export interface HttpClientRequest {
 
 export interface HttpClientResponse<T> {
   headers: any
-  status: AxiosResponse['status']
-  statusText: AxiosResponse['statusText']
+  status: number
+  statusText: string
   data: {
     rows: number
     rows_before_limit_at_least?: number
