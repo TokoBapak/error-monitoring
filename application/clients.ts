@@ -1,5 +1,5 @@
 import {Clickhouse} from "~/application/internal/clickhouse-ts";
-import {Pool} from "pg";
+import pg from "pg";
 
 export const clickhouseClient = new Clickhouse({
     url: process.env.CLICKHOUSE_URL ?? "localhost",
@@ -9,7 +9,7 @@ export const clickhouseClient = new Clickhouse({
     database: process.env.CLICKHOUSE_DATABASE ?? "default"
 }, {defaultFormat: "JSON"});
 
-export const postgresClient = new Pool({
+export const postgresClient = new pg.Pool({
     host: process.env.POSTGRES_HOST ?? "localhost",
     port: Number(process.env.POSTGRES_PORT ?? "5432"),
     user: process.env.POSTGRES_USER ?? "tokobapak",

@@ -1,4 +1,4 @@
-import { Pool } from "pg";
+import pg from "pg";
 import Cursor from "pg-cursor";
 import {IProjectRepository} from "~/application/interfaces/IProjectRepository";
 import {UUID} from "~/primitives/UUID";
@@ -6,7 +6,7 @@ import {Project} from "~/primitives/Project";
 import {NotFoundError} from "~/errors/NotFoundError";
 
 export class ProjectClient implements IProjectRepository {
-    constructor(private readonly client: Pool) {
+    constructor(private readonly client: pg.Pool) {
     }
 
     async create(project: Project): Promise<UUID> {
