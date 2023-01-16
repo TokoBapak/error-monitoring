@@ -8,7 +8,8 @@ export const authRouter = router({
               code: z.string()
             })
         )
-        .query(() => {
+        .query((x) => {
+            x.ctx
             return {
                 message: "Hello world"
             }
