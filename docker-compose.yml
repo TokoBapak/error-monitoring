@@ -1,0 +1,55 @@
+services:
+  clickhouse:
+    image: clickhouse/clickhouse-server:22.12.3
+    ports:
+      - 8123:8123
+      - 9000:9000
+    ulimits:
+      nproc: 65536
+      nofile:
+        soft: 252144
+        hard: 252144
+    environment:
+      # This limits Clickhouse's memory to 30% of the host memory
+      # If you have high volume and your search return incomplete results
+      # You might want to change this to a higher value (and ensure your host has enough memory)
+      MAX_MEMORY_USAGE_RATIO: 0.3
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 10
+        window: 30s
+    healthcheck:
+      test: wget --spider -q localhost:8123/ping
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+  postgres:
+    image: postgres:15.1-bullseye
+    environment:
+      POSTGRES_USER: tokobapak
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: error_monitoring
+    ports:
+      - 5432:5432
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 10
+        window: 30s
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4GB
+        reservations:
+          memory: 100MB
+          cpus: '0.1'
+    healthcheck:
+      test: pg_isready -U tokobapak -d error_monitoring
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s

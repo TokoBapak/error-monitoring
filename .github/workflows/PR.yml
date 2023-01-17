@@ -1,0 +1,74 @@
+name: PR
+
+on:
+  pull_request:
+
+jobs:
+  ci:
+    name: CI
+    runs-on: ubuntu-latest
+    container: node:18-bullseye
+    timeout-minutes: 30
+    services:
+      clickhouse:
+        image: clickhouse/clickhouse-server:22.12.3
+        options: >-
+          --health-cmd " wget --spider -q localhost:8123/ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+          --health-start-period 30s
+          --hostname clickhouse
+          --restart on-failure:10
+      postgres:
+        image: postgres:15.1-bullseye
+        env:
+          POSTGRES_USER: tokobapak
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: error_monitoring
+        options: >-
+          --health-cmd "pg_isready -U tokobapak -d error_monitoring"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+          --health-start-period 30s
+          --hostname postgres
+          --restart on-failure:10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: TruffleHog OSS
+        uses: trufflesecurity/trufflehog@main
+        continue-on-error: true
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --debug --only-verified
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Install dependencies
+        run: pnpm install
+
+      # TODO: uncomment this once eslint has been setup
+      # - name: Lint
+      #   run: npx eslint --ignore-path .gitignore .
+
+      - name: Typecheck
+        run: pnpm run typecheck
+
+      - name: Test
+        run: pnpm run test:coverage
+        env:
+          CLICKHOUSE_URL: clickhouse
+          CLICKHOUSE_PORT: 8123
+          CLICKHOUSE_USER: default
+          CLICKHOUSE_PASSWORD: ""
+          CLICKHOUSE_DATABASE: default

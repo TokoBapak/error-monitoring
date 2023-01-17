@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "target": "ES2020",
+    "module": "commonjs",
+    "declaration": true,
+    "outDir": "./lib",
+    "strict": true
+  },
+  "include": [
+    "src", "index.ts", "jest.config.ts", "tests", "tests"],
+  "exclude": ["node_modules", "**/__tests__/*"]
+}
