@@ -81,6 +81,4 @@ export class GithubClient implements IGithub {
 
         return responseBody as GithubOrganization[];
     }
-
-
 }
