@@ -80,5 +80,5 @@ jobs:
           POSTGRES_USER: tokobapak
           POSTGRES_PASSWORD: password
           POSTGRES_DATABASE: error_monitoring
-      
+
       - uses: codecov/codecov-action@v3
