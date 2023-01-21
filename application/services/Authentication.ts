@@ -5,6 +5,7 @@ import {Token} from "~/primitives/Token";
 import {UUID} from "~/primitives/UUID";
 import {ICache} from "~/application/interfaces/ICache";
 import {UnauthenticatedError} from "~/errors/UnauthenticatedError";
+import {SimpleMemoryCache} from "~/application/repositories/SimpleMemoryCache";
 
 export class Authentication implements IAuthentication {
     constructor(
@@ -67,3 +68,5 @@ export class Authentication implements IAuthentication {
         return Promise.resolve(payload);
     }
 }
+
+export const authenticationService = new Authentication(new SimpleMemoryCache());

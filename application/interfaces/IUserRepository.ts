@@ -1,4 +1,4 @@
-import {GithubUser} from "~/application/interfaces/IGithub";
+import {User} from "~/primitives/User";
 
 export interface IUserRepository {
     /**
@@ -7,7 +7,7 @@ export interface IUserRepository {
      *
      * @param user
      */
-    create(user: GithubUser): Promise<void>;
+    create(user: User): Promise<void>;
 
     /**
      * Remove a user from the database.
@@ -20,12 +20,17 @@ export interface IUserRepository {
      * Query the database for list of users that have access
      * (and technically already accessed) the site.
      */
-    listAll(): Promise<GithubUser[]>;
+    listAll(): Promise<User[]>;
 
     /**
      * Acquire a user by their username.
      * @param username The user's username.
      * @throws {NotFoundError} if the user does not exist
      */
-    getByUsername(username: string): Promise<GithubUser>;
+    getByUsername(username: string): Promise<User>;
+
+    /**
+     * Migrate the tables.
+     */
+    migrate(): Promise<void>;
 }

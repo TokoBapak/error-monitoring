@@ -9,7 +9,7 @@ export const authRouter = router({
             })
         )
         .query((x) => {
-            x.ctx
+            // TODO: call the user service for registration
             return {
                 message: "Hello world"
             }
