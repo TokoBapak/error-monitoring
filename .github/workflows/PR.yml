@@ -72,3 +72,5 @@ jobs:
           CLICKHOUSE_USER: default
           CLICKHOUSE_PASSWORD: ""
           CLICKHOUSE_DATABASE: default
+
+      - uses: codecov/codecov-action@v3
