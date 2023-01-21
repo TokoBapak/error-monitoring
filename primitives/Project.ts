@@ -17,7 +17,7 @@ export class Project {
             id: this.id.toString(),
             name: this.name.toString(),
             repositoryUrl: this.repositoryUrl,
-            createdAt: this.createdAt.toISOString(),
+            createdAt: this.createdAt.toString(),
             createdBy: this.createdBy.toString()
         })
     }
@@ -28,7 +28,7 @@ export class Project {
             new UUID(parsed.id),
             parsed.name,
             parsed.repositoryUrl,
-            parsed.createdAt,
+            new Date(parsed.createdAt),
             new UUID(parsed.createdBy)
         )
     }
