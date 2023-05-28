@@ -78,7 +78,7 @@ export class UserClient implements IUserRepository {
                 throw new NotFoundError(`${username} was not found`);
             }
 
-            let user: User;
+            let user: User | undefined;
             for (const row of rows) {
                 if (row === undefined) throw new NotFoundError(`${username} returned null`);
 
@@ -92,6 +92,8 @@ export class UserClient implements IUserRepository {
             }
 
             await connection.query("COMMIT");
+
+            if (user === undefined) throw new NotFoundError(`${username} was not found`)
 
             return user;
         } catch (error: unknown) {
@@ -127,7 +129,7 @@ export class UserClient implements IUserRepository {
 
             const users: User[] = [];
             for (const row of rows) {
-                if (row === undefined) throw new NotFoundError(`${username} returned null`);
+                if (row === undefined) continue;
 
                 const user = new User(
                     row.github_id,
