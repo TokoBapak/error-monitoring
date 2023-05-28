@@ -1,11 +1,15 @@
 import {type GithubOrganization, type GithubUser, type IGithub} from "~/application/interfaces/IGithub";
 import {GithubApiError} from "~/errors/GithubApiError";
+import {InvalidArgumentError} from "~/errors/InvalidArgumentError";
 
 export class GithubClient implements IGithub {
     constructor(
         private readonly clientId: string,
         private readonly clientSecret: string
-    ) {}
+    ) {
+        if (clientId === "") throw new InvalidArgumentError("clientId is empty");
+        if (clientSecret === "") throw new InvalidArgumentError("clientSecret is empty");
+    }
 
     async accessToken(code: string): Promise<string> {
         const response = await fetch("https://github.com/login/oauth/access_token", {

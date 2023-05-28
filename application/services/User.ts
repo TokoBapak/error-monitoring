@@ -50,7 +50,7 @@ export class UserService implements IUser {
             }
 
             // Rethrow error to upper layer
-            return;
+            throw error;
         }
     }
 

@@ -15,8 +15,8 @@ export class UUID {
 
     constructor(str?: string) {
         if (str === undefined) {
-            this.m_str = this.newUuid();
-            this.version = 7;
+            this.m_str = uuidv4();
+            this.version = 4;
         } else {
             this.m_str = str;
             this.version = 4;
@@ -35,8 +35,11 @@ export class UUID {
     toString() {
         return this.m_str;
     }
+    public static v4(): UUID {
+        return new UUID(uuidv4());
+    }
 
-    private newUuid(): string {
-        return uuidv7();
+    public static v7(): UUID {
+        return new UUID(uuidv7());
     }
 }

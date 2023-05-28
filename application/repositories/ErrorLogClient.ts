@@ -4,26 +4,27 @@ import {UUID} from "~/primitives/UUID";
 import {IErrorLogRepository} from "~/application/interfaces/IErrorLogRepository";
 
 export class ErrorLogClient implements IErrorLogRepository {
-    constructor(private readonly client: Clickhouse) {    }
+    constructor(private readonly client: Clickhouse) {
+    }
 
     async migrate(): Promise<void> {
         await this.client.query(
-            `CREATE TABLE IF NOT EXISTS error_logs (
-                id UUID NOT NULL,
-                project UUID NOT NULL,
-                environment String NOT NULL,
-                level String NOT NULL,
-                title String NOT NULL,
-                status UInt8 NOT NULL,
-                platform Nullable(String),
-                language Nullable(String),
-                payload String NOT NULL,
-                timestamp DateTime NOT NULL,
-                PRIMARY KEY(timestamp)
-            )
-            Engine = MergeTree
-            ORDER BY timestamp
-            TTL timestamp + INTERVAL 3 MONTH DELETE`,
+            `CREATE TABLE error_logs
+             (
+                 id          UUID,
+                 project     UUID,
+                 environment String,
+                 level       String,
+                 title       String,
+                 status      UInt8,
+                 platform Nullable(String),
+                 language Nullable(String),
+                 payload     String,
+                 timestamp   DateTime
+             ) Engine = MergeTree()
+                   ORDER BY (id, timestamp)
+                   TTL timestamp + INTERVAL 3 MONTH
+                DELETE;`,
         );
     }
 
@@ -44,4 +45,4 @@ export class ErrorLogClient implements IErrorLogRepository {
             }],
         );
     }
- }
+}

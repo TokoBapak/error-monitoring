@@ -15,7 +15,7 @@ export class TokenClient implements ITokenRepository {
 
     generate(user: User): Token {
         // Generate a UUID.
-        const id = new UUID();
+        const id = UUID.v7();
 
         // Check if the id is being used
         if (this.store.has(id.toString())) {

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { QueryOptions } from '../clickhouse'
+import {QueryOptions} from '../clickhouse'
 
 export interface RequestParams {
   query: string
