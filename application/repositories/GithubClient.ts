@@ -1,4 +1,4 @@
-import {GithubOrganization, GithubUser, IGithub} from "~/application/interfaces/IGithub";
+import {type GithubOrganization, type GithubUser, type IGithub} from "~/application/interfaces/IGithub";
 import {GithubApiError} from "~/errors/GithubApiError";
 
 export class GithubClient implements IGithub {
@@ -62,7 +62,7 @@ export class GithubClient implements IGithub {
     }
 
     async getUserOrganization(accessToken: string): Promise<GithubOrganization[]> {
-        const response = await fetch("https://api.github.com/user/orgs", {
+        const response = await fetch("https://api.github.com/user/orgs?per_page=100", {
             method: "GET",
             headers: {
                 "Accept": "application/vnd.github+json",

@@ -11,7 +11,9 @@ declare global {
             readonly POSTGRES_PORT: string,
             readonly POSTGRES_USER: string,
             readonly POSTGRES_PASSWORD: string,
-            readonly POSTGRES_DATABASE: string
+            readonly POSTGRES_DATABASE: string,
+            readonly GITHUB_CLIENT_ID: string,
+            readonly GITHUB_CLIENT_SECRET: string
         }
     }
 }

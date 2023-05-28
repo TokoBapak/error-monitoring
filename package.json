@@ -19,23 +19,24 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@types/node": "^18.11.18",
+    "@types/node": "^18.16.16",
     "@types/pg": "^8.6.6",
     "@types/pg-cursor": "^2.7.0",
     "@types/sqlstring": "^2.3.0",
-    "@vitest/coverage-c8": "^0.27.1",
-    "nuxt": "3.0.0",
-    "typescript": "^4.9.4",
-    "vitest": "^0.27.1"
+    "@vitest/coverage-c8": "^0.31.1",
+    "nuxt": "3.5.1",
+    "typescript": "^5.0.4",
+    "vitest": "^0.31.1"
   },
   "dependencies": {
-    "@trpc/client": "^10.9.0",
-    "@trpc/server": "^10.9.0",
+    "@trpc/client": "^10.28.0",
+    "@trpc/server": "^10.28.0",
     "clickcache": "^1.0.6",
     "pg": "^8.8.0",
     "pg-cursor": "^2.7.4",
     "sqlstring": "^2.3.3",
-    "trpc-nuxt": "^0.5.0",
+    "trpc-nuxt": "^0.10.5",
+    "uuidv7": "^0.4.3",
     "zod": "^3.20.2"
   }
 }

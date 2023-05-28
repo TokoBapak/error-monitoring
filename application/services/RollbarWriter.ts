@@ -5,11 +5,6 @@ import {IProjectRepository} from "~/application/interfaces/IProjectRepository";
 import {UUID} from "~/primitives/UUID";
 import {ErrorEvent} from "~/primitives/ErrorEvent";
 import {InvalidProject} from "~/errors/InvalidProject";
-import {Authentication} from "~/application/services/Authentication";
-import {SimpleMemoryCache} from "~/application/repositories/SimpleMemoryCache";
-import {ErrorLogClient} from "~/application/repositories/ErrorLogClient";
-import {ProjectClient} from "~/application/repositories/ProjectClient";
-import {clickhouseClient, postgresClient} from "~/application/clients";
 
 export class RollbarWriter implements IRollbarWriter {
     constructor(
@@ -33,9 +28,3 @@ export class RollbarWriter implements IRollbarWriter {
         return event.uuid;
     }
 }
-
-export const rollbarWriter = new RollbarWriter(
-    new Authentication(new SimpleMemoryCache()),
-    new ErrorLogClient(clickhouseClient),
-    new ProjectClient(postgresClient),
-);
