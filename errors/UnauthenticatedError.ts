@@ -1,5 +1,5 @@
 export class UnauthenticatedError extends Error {
-    constructor(message?: string) {
+    constructor(message = "Unauthenticated") {
         super(message ?? "Unauthenticated");
     }
 }
