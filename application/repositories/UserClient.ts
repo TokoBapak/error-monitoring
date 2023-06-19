@@ -124,6 +124,8 @@ export class UserClient implements IUserRepository {
             const rows = await queryResult.read(Number.MAX_SAFE_INTEGER);
 
             if (rows.length === 0) {
+                await connection.query("COMMIT");
+
                 return [];
             }
 

@@ -34,14 +34,14 @@ export class GithubClient implements IGithub {
             );
         }
 
-        if (responseBody?.access_token !== undefined) {
-            return responseBody.access_token;
+        if (responseBody?.access_token == null) {
+            throw new GithubApiError(
+                "Unknown error, access_token and error field are undefined",
+                "https://docs.github.com/en/developers/apps/building-oauth-apps/authorizing-oauth-apps"
+            );
         }
 
-        throw new GithubApiError(
-            "Unknown error, access_token and error field are undefined",
-            "https://docs.github.com/en/developers/apps/building-oauth-apps/authorizing-oauth-apps"
-        );
+        return responseBody.access_token;
     }
 
     async getAuthenticatedUser(accessToken: string): Promise<GithubUser> {

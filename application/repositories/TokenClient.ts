@@ -7,6 +7,7 @@ import {User} from "~/primitives/User";
 import {UnauthenticatedError} from "~/errors/UnauthenticatedError";
 
 const REVOKED = "REVOKED";
+const DAY_SECONDS = 86_400; // 1 day in seconds
 
 export class TokenClient implements ITokenRepository {
     constructor(private readonly store: ICache) {
@@ -24,11 +25,11 @@ export class TokenClient implements ITokenRepository {
         }
 
         // Insert user to store
-        this.store.set(id.toString(), user.toString(), 86400 /* 1 day */);
+        this.store.set(id.toString(), user.toString(), DAY_SECONDS);
 
         return {
             accessToken: id.toString(),
-            expiredAt: new Date(Date.now() + (86400 * 1000))
+            expiredAt: new Date(Date.now() + (DAY_SECONDS * 1000))
         }
     }
 
@@ -43,6 +44,6 @@ export class TokenClient implements ITokenRepository {
     revoke(token: string): void {
         if (!this.store.has(token)) return;
 
-        this.store.set(token, REVOKED, 86400 * 7 /* 7 days */);
+        this.store.set(token, REVOKED, DAY_SECONDS * 7);
     }
 }
