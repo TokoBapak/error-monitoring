@@ -9,7 +9,7 @@ export class ErrorLogClient implements IErrorLogRepository {
 
     async migrate(): Promise<void> {
         await this.client.query(
-            `CREATE TABLE error_logs
+            `CREATE TABLE IF NOT EXISTS error_logs
              (
                  id          UUID,
                  project     UUID,
