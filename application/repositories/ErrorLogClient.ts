@@ -24,7 +24,7 @@ export class ErrorLogClient implements IErrorLogRepository {
              ) Engine = MergeTree()
                    ORDER BY (id, timestamp)
                    TTL timestamp + INTERVAL 3 MONTH
-                DELETE;`,
+                DELETE`,
         );
     }
 
