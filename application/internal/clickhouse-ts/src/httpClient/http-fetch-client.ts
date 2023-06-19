@@ -1,10 +1,6 @@
-import { URL, URLSearchParams } from "node:url";
-import {
-  HttpClientConstructor,
-  HttpClientRequest,
-  HttpClientResponse
-} from './interface'
-import { HttpClickhouseAxiosError } from '../errors'
+import {URL, URLSearchParams} from "node:url";
+import {HttpClientConstructor, HttpClientRequest, HttpClientResponse} from './interface'
+import {HttpClickhouseAxiosError} from '../errors'
 
 /**
  * HttpClient wraps fetch and provides transparent data transferring between your code and clickhouse server

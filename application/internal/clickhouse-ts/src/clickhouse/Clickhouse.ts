@@ -3,15 +3,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import {
-  JSONFormatRow,
-  Connection,
-  Options,
-  QueryOptions
-} from './interface'
+import {Connection, JSONFormatRow, Options, QueryOptions} from './interface'
 
-import { HttpClientResponse } from '../httpClient'
-import { jsonInsertFormatToSqlValues, jsonRowsToInsertFormat } from '../utils'
+import {HttpClientResponse} from '../httpClient'
+import {jsonInsertFormatToSqlValues, jsonRowsToInsertFormat} from '../utils'
 import {HttpFetchClient} from "../httpClient/http-fetch-client";
 
 /**

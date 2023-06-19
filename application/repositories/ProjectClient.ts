@@ -15,17 +15,14 @@ export class ProjectClient implements IProjectRepository {
         try {
             await conn.query("BEGIN TRANSACTION ISOLATION LEVEL READ COMMITTED");
 
-            await conn.query(`INSERT INTO
-                project
-                (
-                    id,
-                    name,
-                    repository_url,
-                    created_at,
-                    created_by,
-                    updated_at,
-                    updated_by
-                )`,
+            await conn.query(`INSERT INTO project
+                              (id,
+                               name,
+                               repository_url,
+                               created_at,
+                               created_by,
+                               updated_at,
+                               updated_by)`,
                 [
                     project.id.toString(),
                     project.name,
@@ -53,7 +50,7 @@ export class ProjectClient implements IProjectRepository {
         const conn = await this.client.connect();
 
         try {
-            const queryResult = await conn.query(`SELECT EXISTS(SELECT * FROM project WHERE id = ?) AS exists`,[id.toString()]);
+            const queryResult = await conn.query(`SELECT EXISTS(SELECT * FROM project WHERE id = ?) AS exists`, [id.toString()]);
 
             return queryResult.rows[0].exists;
 
@@ -68,17 +65,14 @@ export class ProjectClient implements IProjectRepository {
         const conn = await this.client.connect();
 
         try {
-            const queryResult = await conn.query(`SELECT 
-                id, 
-                name, 
-                repository_url, 
-                created_at, 
-                created_by
-            FROM
-                project
-            WHERE
-                id = $1
-            LIMIT 1`,
+            const queryResult = await conn.query(`SELECT id,
+                                                         name,
+                                                         repository_url,
+                                                         created_at,
+                                                         created_by
+                                                  FROM project
+                                                  WHERE id = $1
+                                                  LIMIT 1`,
                 [id.toString()],
             );
 
@@ -125,14 +119,12 @@ export class ProjectClient implements IProjectRepository {
         const conn = await this.client.connect();
 
         try {
-            const queryResult = conn.query(new Cursor(`SELECT 
-                id, 
-                name, 
-                repository_url, 
-                created_at, 
-                created_by
-            FROM
-                project`));
+            const queryResult = conn.query(new Cursor(`SELECT id,
+                                                              name,
+                                                              repository_url,
+                                                              created_at,
+                                                              created_by
+                                                       FROM project`));
 
             const rows = await queryResult.read(500);
 
@@ -145,7 +137,8 @@ export class ProjectClient implements IProjectRepository {
             for (const row of rows) {
                 if (row === undefined) continue;
 
-                let createdAt: Date = new Date(0);;
+                let createdAt: Date = new Date(0);
+
                 if (row.created_at !== undefined) {
                     if (typeof row.created_at === "string") {
                         createdAt = new Date(row.created_at);
@@ -179,15 +172,16 @@ export class ProjectClient implements IProjectRepository {
         try {
             await conn.query("BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;");
 
-            await conn.query(`CREATE TABLE IF NOT EXISTS project (
-                id UUID PRIMARY KEY,
-                name VARCHAR(255) NOT NULL,
-                repository_url TEXT NOT NULL,
-                created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-                created_by UUID NOT NULL,
-                updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
-                updated_by UUID NOT NULL
-            )`);
+            await conn.query(`CREATE TABLE IF NOT EXISTS project
+                              (
+                                  id             UUID PRIMARY KEY,
+                                  name           VARCHAR(255) NOT NULL,
+                                  repository_url TEXT         NOT NULL,
+                                  created_at     TIMESTAMP    NOT NULL DEFAULT NOW(),
+                                  created_by     UUID         NOT NULL,
+                                  updated_at     TIMESTAMP    NOT NULL DEFAULT NOW(),
+                                  updated_by     UUID         NOT NULL
+                              )`);
 
             await conn.query("COMMIT;");
         } catch (error: unknown) {

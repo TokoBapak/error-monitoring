@@ -5,4 +5,4 @@ export const appRouter = router({
     auth: authRouter
 });
 
-export type AppRouter = typeof appRouter
+export type AppRouter = typeof appRouter;

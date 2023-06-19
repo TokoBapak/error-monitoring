@@ -1,5 +1,5 @@
-import {describe, it, expect, beforeAll, afterAll} from "vitest";
-import { Clickhouse } from '../src/clickhouse'
+import {afterAll, beforeAll, describe, expect, it} from "vitest";
+import {Clickhouse} from '../src/clickhouse'
 
 const instance = new Clickhouse({
     url: process.env.CLICKHOUSE_URL ?? "localhost",

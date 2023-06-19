@@ -1,10 +1,10 @@
 // API reference for this endpoint: https://docs.rollbar.com/reference/create-item
 
 import {z, ZodError} from "zod";
-import {rollbarWriter} from "~/application/services/RollbarWriter";
-import {ErrorEvent} from "~/primitives/ErrorEvent";
+import {type ErrorEvent} from "~/primitives/ErrorEvent";
 import {UUID} from "~/primitives/UUID";
 import {convertToErrorLevel} from "~/primitives/ErrorLevel";
+import {rollbarWriter} from "~/application/globals";
 
 const bodySchemaBase = z.object({
     telemetry: z.array(z.object({

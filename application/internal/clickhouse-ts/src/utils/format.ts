@@ -1,9 +1,9 @@
 /* eslint-disable no-tabs */
 import ss from 'sqlstring'
-import { JSONFormatRow } from '../clickhouse'
-import { PreprocessInsertQueryError } from '../errors'
-import { isNull, isObject } from './common'
-import { OptimizedJSONInsertFormat } from './interface'
+import {JSONFormatRow} from '../clickhouse'
+import {PreprocessInsertQueryError} from '../errors'
+import {isNull, isObject} from './common'
+import {OptimizedJSONInsertFormat} from './interface'
 
 /**
  * Get optimized and validated insert format for http insert request
